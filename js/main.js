@@ -21,16 +21,17 @@ const buttonEl = document.querySelector('button');
 document.querySelector('#board').addEventListener('click', handleMove);
 document.querySelector('button').addEventListener('click', init);
 
+
 /*----- functions -----*/
 init();
 
-// Initialize all state, then call render
+
 function init() {
-  // Visualize by rotating 90 deg counter-clockwise
+  // visualize the board by rotating 90 degrees counter-clockwise
   board = [
-    [0, 0, 0],  // col 0
-    [0, 0, 0],  // col 1
-    [0, 0, 0],  // col 2
+    [0, 0, 0],  // column 0
+    [0, 0, 0],  // column 1
+    [0, 0, 0],  // column 2
   ];
   turn = 1;
   winner = null;
@@ -39,15 +40,14 @@ function init() {
 
 function handleMove(evt) {
 
-    let x = evt.target.id[3];
-    let y = evt.target.id[1];
+    let x = parseInt(evt.target.id[3]);
+    let y = parseInt(evt.target.id[1]);
 
     if (board[x][y]) return; 
     
     board[x][y] = turn;    
     turn = -turn;
-
-    // winner = checkWinner(x, y);
+    winner = checkWinner(x, y);
 
     render();
 }
@@ -78,22 +78,21 @@ function renderMessage() {
 }
 
 function checkWinner(x, y) {
-    // let winner = checkVertWin(x, y) || checkHorzWin(x, y);
-    let winner = checkVertWin(x, y);
+    let winner = checkVertWin(x, y) || checkHorzWin(x, y) || checkDiagWin(x, y);
     // TODO: check for tie
     return winner;
 }
 
-function checkVertWin(x, y) {
+function checkHorzWin(x, y) {
     const cell = board[x][y];
     let count = 0;
-    // check up
+    // check right
     let xCheck = x + 1;
     while (xCheck < 3 && board[xCheck][y] === cell) {
         count++;
         xCheck++;
     }
-    // check down
+    // check left
     xCheck = x - 1;
     while (xCheck >=0 && board[xCheck][y] === cell) {
         count++;
@@ -103,16 +102,16 @@ function checkVertWin(x, y) {
     return count === 2 ? cell : null;
 }
 
-function checkHorzWin(x, y) {
+function checkVertWin(x, y) {
     const cell = board[x][y];
     let count = 0;
-    // check right
+    // check up
     let yCheck = y + 1;
     while (yCheck < 3 && board[x][yCheck] === cell) {
         count++;
         yCheck++;
     }
-    // check left
+    // check down
     yCheck = y - 1;
     while (yCheck >= 0 && board[x][yCheck] === cell) {
         count++;
@@ -122,6 +121,29 @@ function checkHorzWin(x, y) {
     return count === 2 ? cell : null;
 }
 
-function checkDiagWin(colIdx, rowIdx) {
-    const cell = board[colIdx][rowIdx];
+function checkDiagWin(x, y) {
+    console.log('diag win being called');
+    const cell = board[x][y];
+    let count = 0;
+    // check \ diagonal
+    let xCheck = x + 1;
+    let yCheck = y - 1;
+    console.log('FIRST xCheck and yCheck are ', xCheck, yCheck);
+    while (xCheck < 3 && yCheck >= 0 && board[xCheck][yCheck] === cell) {
+        count++;
+        xCheck++;
+        yCheck--;
+    }
+    // check / diagonal
+    // xCheck = x - 1;
+    // yCheck = y + 1;
+    // console.log('SECOND xCheck and yCheck are ', xCheck, yCheck);
+    // while (xCheck >= 0 && yCheck < 3 && board[xCheck][yCheck] === cell) {
+    //     count++;
+    //     console.log('this is count', count);
+    //     xCheck--;
+    //     yCheck++;
+    // }
+
+    return count === 2 ? cell : null;
 }
