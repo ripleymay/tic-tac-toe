@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    /* viewport units: vh (viewport/page height), vw, vmin (smallest between vh & vw) */
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  header {
+    font-size: 10vmin;
+    letter-spacing: 1vmin;
+    color: blue;
+  }
+  
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 10vmin);
+    grid-template-rows: repeat(3, 10vmin);
+  }
+  
+  #board > div {
+    border: 0.1vmin solid blue;
+  }
+  
+  #board > div:hover {
+    background-color: lightblue;
+  }
