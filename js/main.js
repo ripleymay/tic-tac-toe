@@ -19,7 +19,7 @@ const buttonEl = document.querySelector('button');
 
 /*----- event listeners -----*/
 document.querySelector('#board').addEventListener('click', handleMove);
-document.querySelector('button').addEventListener('click', init);
+buttonEl.addEventListener('click', init);
 
 
 /*----- functions -----*/
@@ -78,7 +78,7 @@ function renderMessage() {
 }
 
 function checkWinner(x, y) {
-    let winner = checkVertWin(x, y) || checkHorzWin(x, y) || checkDiagWin(x, y);
+    let winner = checkVertWin(x, y) || checkHorzWin(x, y) || checkLowerDiagWin(x, y) || checkUpperDiagWin(x, y);
     // TODO: check for tie
     return winner;
 }
@@ -121,29 +121,48 @@ function checkVertWin(x, y) {
     return count === 2 ? cell : null;
 }
 
-function checkDiagWin(x, y) {
-    console.log('diag win being called');
+function checkLowerDiagWin(x, y) {
     const cell = board[x][y];
     let count = 0;
     // check \ diagonal
     let xCheck = x + 1;
     let yCheck = y - 1;
-    console.log('FIRST xCheck and yCheck are ', xCheck, yCheck);
     while (xCheck < 3 && yCheck >= 0 && board[xCheck][yCheck] === cell) {
         count++;
         xCheck++;
         yCheck--;
     }
     // check / diagonal
-    // xCheck = x - 1;
-    // yCheck = y + 1;
-    // console.log('SECOND xCheck and yCheck are ', xCheck, yCheck);
-    // while (xCheck >= 0 && yCheck < 3 && board[xCheck][yCheck] === cell) {
-    //     count++;
-    //     console.log('this is count', count);
-    //     xCheck--;
-    //     yCheck++;
-    // }
+    xCheck = x - 1;
+    yCheck = y + 1;
+    while (xCheck >= 0 && yCheck < 3 && board[xCheck][yCheck] === cell) {
+        count++;
+        xCheck--;
+        yCheck++;
+    }
+
+    return count === 2 ? cell : null;
+}
+
+function checkUpperDiagWin(x, y) {
+    const cell = board[x][y];
+    let count = 0;
+    // check \ diagonal
+    let xCheck = x + 1;
+    let yCheck = y + 1;
+    while (xCheck < 3 && yCheck < 3 && board[xCheck][yCheck] === cell) {
+        count++;
+        xCheck++;
+        yCheck++;
+    }
+    // check / diagonal
+    xCheck = x - 1;
+    yCheck = y - 1;
+    while (xCheck >= 0 && yCheck >= 0 && board[xCheck][yCheck] === cell) {
+        count++;
+        xCheck--;
+        yCheck--;
+    }
 
     return count === 2 ? cell : null;
 }
