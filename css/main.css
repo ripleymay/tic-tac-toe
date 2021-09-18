@@ -3,7 +3,6 @@
   }
   
   body {
-    /* viewport units: vh (viewport/page height), vw, vmin (smallest between vh & vw) */
     height: 100vh;
     margin: 0;
     display: flex;
@@ -27,6 +26,7 @@
   
   #board > div {
     border: 0.1vmin solid blue;
+    text-align: center;
   }
   
   #board > div:hover {

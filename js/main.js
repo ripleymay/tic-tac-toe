@@ -18,7 +18,7 @@ const buttonEl = document.querySelector('button');
 
 
 /*----- event listeners -----*/
-document.getElementById('#board > div').addEventListener('click', handleMove);
+document.querySelector('#board').addEventListener('click', handleMove);
 document.querySelector('button').addEventListener('click', init);
 
 /*----- functions -----*/
@@ -38,34 +38,32 @@ function init() {
 }
 
 function handleMove(evt) {
-    let colIdx = markerEls.indexOf(evt.target);
-    if (colIdx === -1) return;
-    // find the rowIdx for the first 0 in the column Array
 
-    let colArray = board[colIdx];
-    let rowIdx = colArray.indexOf(0);
-    board[colIdx][rowIdx] = turn;
+    let x = evt.target.id[3];
+    let y = evt.target.id[1];
+
+    if (board[x][y]) return; 
     
+    board[x][y] = turn;    
     turn = -turn;
 
-    winner = checkWinner(rowIdx, colIdx);
+    // winner = checkWinner(x, y);
 
     render();
 }
-
 
 function render() {
     renderBoard();
     renderMessage();
     // TO DO: show a replay button if someone wins
-    buttonEl.style.visibility = winner ? visible : hidden;
+    // buttonEl.style.visibility = winner ? visible : hidden;
 }
 
 function renderBoard() {
     board.forEach(function(colArray, colIndex) {
-        colArray.forEach(function(slot, rowIndex) {
-            let slotDiv = document.getElementById(`r${rowIndex}c${colIndex}`);
-            slotDiv.style.backgroundColor = colorLookup[slot];
+        colArray.forEach(function(cell, rowIndex) {
+            let cellDiv = document.getElementById(`r${rowIndex}c${colIndex}`);
+            cellDiv.textContent = symbolLookup[cell];
         });
     });
 
@@ -79,46 +77,51 @@ function renderMessage() {
     }
 }
 
-function checkWinner(rowIdx, colIdx) {
-    let winner = checkVertWin(colIdx, rowIdx) || checkHorzWin(colIdx, rowIdx);
+function checkWinner(x, y) {
+    // let winner = checkVertWin(x, y) || checkHorzWin(x, y);
+    let winner = checkVertWin(x, y);
     // TODO: check for tie
     return winner;
 }
 
-function checkVertWin(colIdx, rowIdx) {
-    const cell = board[colIdx][rowIdx];
+function checkVertWin(x, y) {
+    const cell = board[x][y];
     let count = 0;
     // check up
-    let row = rowIdx + 1;
-    while (row < 6 && board[colIdx][row] === cell) {
+    let xCheck = x + 1;
+    while (xCheck < 3 && board[xCheck][y] === cell) {
         count++;
-        row++;
+        xCheck++;
     }
     // check down
-    row = rowIdx - 1;
-    while (row >=0 && board[colIdx][row] === cell) {
+    xCheck = x - 1;
+    while (xCheck >=0 && board[xCheck][y] === cell) {
         count++;
-        row--;
+        xCheck--;
     }
 
-    return count >= 3 ? cell : null;
+    return count === 2 ? cell : null;
 }
 
-function checkHorzWin(colIdx, rowIdx) {
-    const cell = board[colIdx][rowIdx];
+function checkHorzWin(x, y) {
+    const cell = board[x][y];
     let count = 0;
     // check right
-    let col = colIdx + 1;
-    while (col < 7 && board[col][rowIdx] === cell) {
+    let yCheck = y + 1;
+    while (yCheck < 3 && board[x][yCheck] === cell) {
         count++;
-        col++;
+        yCheck++;
     }
     // check left
-    col = colIdx - 1;
-    while (col >= 0 && board[col][rowIdx] === cell) {
+    yCheck = y - 1;
+    while (yCheck >= 0 && board[x][yCheck] === cell) {
         count++;
-        col--;
+        yCheck--;
     }
 
-    return count >= 3 ? cell : null;
+    return count === 2 ? cell : null;
+}
+
+function checkDiagWin(colIdx, rowIdx) {
+    const cell = board[colIdx][rowIdx];
 }
