@@ -31,7 +31,9 @@
   
   #board > div {
     border: 0.5vmin solid saddlebrown;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 8vmin;
   }
   
