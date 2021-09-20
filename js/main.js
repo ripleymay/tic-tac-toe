@@ -76,18 +76,15 @@ function renderMessage() {
     } else if (winner) {
         messageEl.textContent = `${symbolLookup[winner]} wins!`;
     } else {
-        messageEl.textContent = `It is ${symbolLookup[turn]}'s turn`;
+        messageEl.textContent = `It\'s ${symbolLookup[turn]}'s turn`;
     }
 }
 
 function checkWinner() {
-    if (!board.includes(null)) { 
-        winner = 'T';
-    } else {
-        winCombos.forEach(function(winCombo) {
-            let total = board[winCombo[0]] + board[winCombo[1]] + board[winCombo[2]];
-            if (Math.abs(total) === 3) winner = turn;
-        });
-    }
+    winCombos.forEach(function(winCombo) {
+        let total = board[winCombo[0]] + board[winCombo[1]] + board[winCombo[2]];
+        if (Math.abs(total) === 3) winner = turn;
+    });
+    if (!board.includes(null) && !winner) winner = 'T';
     return winner;
 }

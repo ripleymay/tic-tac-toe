@@ -9,27 +9,53 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Inter', sans-serif;
   }
   
   header {
     font-size: 10vmin;
     letter-spacing: 1vmin;
-    color: blue;
+    color: darkslategray;
+  }
+
+  h3 {
+    font-size: 4vmin;
   }
   
   #board {
     display: grid;
-    grid-template-columns: repeat(3, 10vmin);
-    grid-template-rows: repeat(3, 10vmin);
+    grid-template-columns: repeat(3, 14vmin);
+    grid-template-rows: repeat(3, 14vmin);
+    margin: 5vmin;
   }
   
   #board > div {
-    border: 0.1vmin solid blue;
+    border: 0.5vmin solid saddlebrown;
     text-align: center;
     font-size: 8vmin;
   }
   
   #board > div:hover {
-    background-color: lightblue;
+    background-color: linen;
+  }
+
+  #board > .top {
+    border-top: none;
+  }
+  #board > .right {
+    border-right: none;
+  }
+  #board > .left {
+    border-left: none;
+  }
+  #board > .bottom {
+    border-bottom: none;
+  }
+
+  button {
+    padding: 2vmin;
+    border-radius: 25%;
+    border: none;
+    font-size: 2vmin;
+    background-color: darkseagreen;
   }
