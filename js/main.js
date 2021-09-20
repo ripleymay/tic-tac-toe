@@ -5,6 +5,17 @@ const symbolLookup = {
     '-1': 'O'
 } 
 
+const winCombos = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+];
+
 
 /*----- state (variables) -----*/
 let board;  // array of column arrays
@@ -28,11 +39,7 @@ init();
 
 function init() {
   // visualize the board by rotating 90 degrees counter-clockwise
-  board = [
-    [0, 0, 0],  // column 0
-    [0, 0, 0],  // column 1
-    [0, 0, 0],  // column 2
-  ];
+  board = [null, null, null, null, null, null, null, null, null];
   turn = 1;
   winner = null;
   render();
@@ -40,14 +47,13 @@ function init() {
 
 function handleMove(evt) {
 
-    let x = parseInt(evt.target.id[3]);
-    let y = parseInt(evt.target.id[1]);
+    let space = parseInt(evt.target.id);
 
-    if (board[x][y]) return; 
+    if (board[space] || winner) return; 
     
-    board[x][y] = turn;    
+    board[space] = turn;    
+    winner = checkWinner();
     turn = -turn;
-    winner = checkWinner(x, y);
 
     render();
 }
@@ -55,114 +61,33 @@ function handleMove(evt) {
 function render() {
     renderBoard();
     renderMessage();
-    // TO DO: show a replay button if someone wins
-    // buttonEl.style.visibility = winner ? visible : hidden;
+    buttonEl.style.visibility = winner ? 'visible' : 'hidden';
 }
 
 function renderBoard() {
-    board.forEach(function(colArray, colIndex) {
-        colArray.forEach(function(cell, rowIndex) {
-            let cellDiv = document.getElementById(`r${rowIndex}c${colIndex}`);
-            cellDiv.textContent = symbolLookup[cell];
+    board.forEach(function(value, index) {
+            document.getElementById(`${index}`).textContent = symbolLookup[value];
         });
-    });
-
 }
 
 function renderMessage() {
-    if (!winner) {
-        messageEl.textContent = `It is ${symbolLookup[turn]}'s turn`;
+    if (winner === 'T') {
+        messageEl.textContent = 'It\'s a tie!';
+    } else if (winner) {
+        messageEl.textContent = `${symbolLookup[winner]} wins!`;
     } else {
-        messageEl.textContent = `${symbolLookup[winner]} wins!`
+        messageEl.textContent = `It is ${symbolLookup[turn]}'s turn`;
     }
 }
 
-function checkWinner(x, y) {
-    let winner = checkVertWin(x, y) || checkHorzWin(x, y) || checkLowerDiagWin(x, y) || checkUpperDiagWin(x, y);
-    // TODO: check for tie
+function checkWinner() {
+    if (!board.includes(null)) { 
+        winner = 'T';
+    } else {
+        winCombos.forEach(function(winCombo) {
+            let total = board[winCombo[0]] + board[winCombo[1]] + board[winCombo[2]];
+            if (Math.abs(total) === 3) winner = turn;
+        });
+    }
     return winner;
-}
-
-function checkHorzWin(x, y) {
-    const cell = board[x][y];
-    let count = 0;
-    // check right
-    let xCheck = x + 1;
-    while (xCheck < 3 && board[xCheck][y] === cell) {
-        count++;
-        xCheck++;
-    }
-    // check left
-    xCheck = x - 1;
-    while (xCheck >=0 && board[xCheck][y] === cell) {
-        count++;
-        xCheck--;
-    }
-
-    return count === 2 ? cell : null;
-}
-
-function checkVertWin(x, y) {
-    const cell = board[x][y];
-    let count = 0;
-    // check up
-    let yCheck = y + 1;
-    while (yCheck < 3 && board[x][yCheck] === cell) {
-        count++;
-        yCheck++;
-    }
-    // check down
-    yCheck = y - 1;
-    while (yCheck >= 0 && board[x][yCheck] === cell) {
-        count++;
-        yCheck--;
-    }
-
-    return count === 2 ? cell : null;
-}
-
-function checkLowerDiagWin(x, y) {
-    const cell = board[x][y];
-    let count = 0;
-    // check \ diagonal
-    let xCheck = x + 1;
-    let yCheck = y - 1;
-    while (xCheck < 3 && yCheck >= 0 && board[xCheck][yCheck] === cell) {
-        count++;
-        xCheck++;
-        yCheck--;
-    }
-    // check / diagonal
-    xCheck = x - 1;
-    yCheck = y + 1;
-    while (xCheck >= 0 && yCheck < 3 && board[xCheck][yCheck] === cell) {
-        count++;
-        xCheck--;
-        yCheck++;
-    }
-
-    return count === 2 ? cell : null;
-}
-
-function checkUpperDiagWin(x, y) {
-    const cell = board[x][y];
-    let count = 0;
-    // check \ diagonal
-    let xCheck = x + 1;
-    let yCheck = y + 1;
-    while (xCheck < 3 && yCheck < 3 && board[xCheck][yCheck] === cell) {
-        count++;
-        xCheck++;
-        yCheck++;
-    }
-    // check / diagonal
-    xCheck = x - 1;
-    yCheck = y - 1;
-    while (xCheck >= 0 && yCheck >= 0 && board[xCheck][yCheck] === cell) {
-        count++;
-        xCheck--;
-        yCheck--;
-    }
-
-    return count === 2 ? cell : null;
 }

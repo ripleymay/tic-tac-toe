@@ -27,6 +27,7 @@
   #board > div {
     border: 0.1vmin solid blue;
     text-align: center;
+    font-size: 8vmin;
   }
   
   #board > div:hover {
